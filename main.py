@@ -1,4 +1,5 @@
 from source2 import *
+import random
 
 class block:
     def __init__ (self, s,w,l):
