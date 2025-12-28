@@ -1,4 +1,4 @@
-from source2 import *
+from funcs import *
 import random
 
 class block:
