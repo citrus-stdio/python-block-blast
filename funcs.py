@@ -1,5 +1,10 @@
 render = []
-    
+
+# errors!!
+class InvalidBlockChoice(Exception) : pass
+class InvalidCoordinate(Exception) : pass
+class PlacementError(Exception) : pass
+
 def display(item) :
     for arr in item:
         print(str(arr))
@@ -44,48 +49,52 @@ def texturize(list,texture):
     return list
 
 def getPlayerInput(canvas,first,second,third):
-    one = True
-    two = True
-    three = True
-    
-    while True:
-        if one and not two and not three:
-            num = "1"
-        elif two and not one and not three:
-            num = "2"
-        elif three and not one and not two:
-            num = "3"
-        elif two and three and not one:
-            num = input("Input the block (2,3) that you want to place: ")
-        elif one and three and not two:
-            num = input("Input the block (1,3) that you want to place: ")
-        elif one and two and not three:
-            num = input("Input the block (1,2) that you want to place: ")
-        elif one and two and three:
-            num = input("Input the block (1,2,3) that you want to place: ")
-            
-        x = input("Input the x coordinate (0-7) where you want to place the block: ")
-        y = input("Input the y coordinate (0-7) where you want to place the block: ")
-        
-        # Assign blocks to their respective number
-        block = None
-        if num == "1":
-            block = first.shape
-            one = False
-        elif num == "2":
-            block = second.shape
-            two = False
-        elif num == "3":
-            block  = third.shape
-            three = False
-        else:
-            print("Failed to assign block")
-            
-        if (1<=int(num)<=3) and (0<=int(x)<=7) and (0<=int(y)<=7) and (check(canvas,block,int(x),int(y))):
-            return [canvas,block,int(x),int(y),num]
-        else:
-            print("The block you tried to place is not placable in that location, please try again")
-        
+    blocks = {
+        "1" : [first.shape,True],
+        "2" : [second.shape,True],
+        "3" : [third.shape,True]
+    }
+
+    # creates an array in which the number is only displayed if the number's corresponding boolean in the blocks dictionary is true
+    available = [num for num, (_,avail) in blocks.items() if avail]
+    print(available)
+
+    # let the player choose a block
+    if len(available) == 1:
+        num = available[0]
+    else:
+        num = input(f"Choose a block : {tuple(available)}")
+
+    # check availability
+    if num not in available :
+        raise InvalidBlockChoice(f"Block not available, please choose from the available blocks {tuple(available)}")
+
+    block = blocks[num][0]
+    blocks[num][1] = False
+
+    x = input("Input the x coordinate (0-7) where you want to place the block: ")
+    y = input("Input the y coordinate (0-7) where you want to place the block: ")
+
+    # check if inputs are integers
+    try:
+        x = int(x)
+        y = int(y)
+    except:
+        raise InvalidCoordinate("Coordinates must be an integer")
+
+    # check if inputs are within bounds
+
+    if not (0<=x<=7 and 0<=y<=7):
+        raise InvalidCoordinate(f"Coordinates must be between 0 and 7, got ({x},{y})")
+
+    # check if block is placeable
+
+    if check(canvas,block,int(x),int(y)) == False:
+        raise PlacementError(f"Block {num} cannot be placed at ({x},{y})")
+
+    # success!
+    return canvas, block, x, y,num
+
 def check(canvas,item,x,y):
     try:
         for i in range(len(item)):
