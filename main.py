@@ -6,6 +6,8 @@ class block:
         self.shape = s
         self.width = w
         self.length = l
+
+
         
 lblock1 = block([[1,0],[1,0],[1,1]],2,3)
 lblock2 = block([[0,1],[0,1],[1,1]],2,3)
@@ -40,6 +42,7 @@ blocklisty = 5
 render = fillRender(30,10)
 place(render,xstrip,1,0)
 place(render,ystrip,0,1)
+
 #while True:
 
 # Behold the texturizer
@@ -48,6 +51,12 @@ texturize(blocks,"x")
 block1 = random.choice(blocks)
 block2 = random.choice(blocks)
 block3 = random.choice(blocks)
+# block dictionary!!
+blocks = {
+    "1": [block1.shape, True],
+    "2": [block2.shape, True],
+    "3": [block3.shape, True]
+}
 # Put block choice on the screen
 place(render,block1.shape,blocklistx,blocklisty)
 place(render,[[","]],blocklistx+1+block1.width,blocklisty)
@@ -63,22 +72,26 @@ place(render,board,1,1)
 displayRender()
 
 for i in range(0,3):
+
     # Get player input
-    playerInput = getPlayerInput(board,block1,block2,block3)
+    while True:
+        try:
+            playerInput = getPlayerInput(board,blocks)
+            break
+        except(Exception) as e:
+            # specified instruction error
+            print(e)
+
+    # place block on the board
     place(playerInput[0],playerInput[1],playerInput[2],playerInput[3])
     # Clear block that is used from screen
-    if playerInput[4] == "1":
-        fill(render,blocklistx,blocklisty,blocklistx+block1.width,blocklisty+block1.length)
-    elif playerInput[4] == "2":
-        fill(render,blocklistx+3+block1.width,blocklisty,blocklistx+3+block1.width+block2.width,blocklisty+block2.length)
-    elif playerInput[4] == "3":
-        fill(render,blocklistx+6+block1.width+block2.width,blocklisty,blocklistx+6+block3.width+block2.width+block1.width,blocklisty+block3.length)
-    
+    clearChoice(playerInput[4],block1,block2,block3,blocklistx,blocklisty)
+
     # Place board on render again and display the render
     place(render,board,1,1)
     displayRender()
-    
-    
+
+    blocks[str(playerInput[4])][1] = False
     
     #if input("press 0 to continue: ") != str(0):
         #break
