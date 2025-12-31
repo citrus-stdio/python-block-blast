@@ -48,16 +48,10 @@ def texturize(list,texture):
     
     return list
 
-def getPlayerInput(canvas,first,second,third):
-    blocks = {
-        "1" : [first.shape,True],
-        "2" : [second.shape,True],
-        "3" : [third.shape,True]
-    }
+def getPlayerInput(canvas,blocks):
 
     # creates an array in which the number is only displayed if the number's corresponding boolean in the blocks dictionary is true
     available = [num for num, (_,avail) in blocks.items() if avail]
-    print(available)
 
     # let the player choose a block
     if len(available) == 1:
@@ -70,7 +64,6 @@ def getPlayerInput(canvas,first,second,third):
         raise InvalidBlockChoice(f"Block not available, please choose from the available blocks {tuple(available)}")
 
     block = blocks[num][0]
-    blocks[num][1] = False
 
     x = input("Input the x coordinate (0-7) where you want to place the block: ")
     y = input("Input the y coordinate (0-7) where you want to place the block: ")
@@ -93,7 +86,7 @@ def getPlayerInput(canvas,first,second,third):
         raise PlacementError(f"Block {num} cannot be placed at ({x},{y})")
 
     # success!
-    return canvas, block, x, y,num
+    return canvas, block, x, y, num
 
 def check(canvas,item,x,y):
     try:
@@ -104,6 +97,26 @@ def check(canvas,item,x,y):
     except:
         return False
     return True
-    
-    
+
+def clearChoice(num, first, second, third, x, y):
+    # here, x and y represent the present coordinates of the block list
+
+    blocks = {
+        "1": first,
+        "2": second,
+        "3": third
+    }
+
+    # offset to make things go into actual place, i forgot why it doesn't work without, oh well
+    offset = 0
+
+    for i in range(1,int(num)):
+        offset += blocks[str(i)].width
+
+    offset += (int(num)-1)*3
+
+    xAligned = x+offset
+
+    fill(render, xAligned, y, xAligned + blocks[str(num)].width, y + blocks[str(num)].length)
+
 
