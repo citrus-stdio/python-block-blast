@@ -119,4 +119,78 @@ def clearChoice(num, first, second, third, x, y):
 
     fill(render, xAligned, y, xAligned + blocks[str(num)].width, y + blocks[str(num)].length)
 
+def clear(canvas):
+    counter = 0
+    points = 0
+    combo = 0
 
+    clearables = {
+        "x" : [0,0,0,0,0,0,0,0],
+        "y" : [0,0,0,0,0,0,0,0]
+    }
+
+    # check for horizontal clearings
+
+    for i in range(0,len(canvas)):
+        for j in range(0,len(canvas[i])):
+            if canvas[i][j] != 0:
+                counter += 1
+
+        if counter >= len(canvas[i]):
+            clearables["y"][i] = 1
+
+        # reset counter after iteration
+        counter = 0
+
+    # check for vertical clearings
+
+    for j in range(0,len(canvas[0])):
+        for i in range(0,len(canvas)):
+            if canvas[i][j] != 0:
+                counter += 1
+
+        if counter >= len(canvas[i]):
+            clearables["x"][j] = 1
+
+        # reset counter after iteration
+        counter = 0
+
+    # clear horizontally
+
+    for i in range(0,len(canvas)):
+        if clearables["y"][i] == 1:
+            for j in range(0,len(canvas[i])):
+                canvas[i][j] = 0
+
+
+    # clear vertically
+
+    for j in range(0,len(canvas[0])):
+        if clearables["x"][j] == 1:
+            for i in range(0,len(canvas)):
+                canvas[i][j] = 0
+
+    for i in range(0,len(clearables["x"])):
+        combo += clearables["x"][i]
+        combo += clearables["y"][i]
+
+
+    points = 20 * combo * combo
+
+    return canvas, points
+
+def loseState(canvas,available):
+    counter=0
+    for i in range(len(available)):
+        if available[str(i+1)][1]:
+            for j in range(len(canvas)):
+                for k in range(len(canvas[j])):
+                    if check(canvas,available[str(i+1)][0],k,j):
+                        break
+                    else:
+                        counter+=1
+            if counter >= len(canvas)*len(canvas[0]):
+                return True
+
+    # blocks are able to placed?
+    return False
