@@ -49,8 +49,6 @@ place(render,scoreboard,14,1)
 blocklist = texturize(blocklist, "x")
 
 while True:
-
-    print('loop start')
     # Block selection
     block1 = random.choice(blocklist)
     block2 = random.choice(blocklist)
@@ -116,8 +114,8 @@ while True:
         blocks[str(playerInput[4])][1] = False
 
         # check for lose state
-        #if loseState(board,blocks):
-         #   print("you lost")
+        if loseState(board,blocks):
+            print("you lost")
 
         #if input("press 0 to continue: ") != str(0):
             #break

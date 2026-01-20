@@ -34,10 +34,15 @@ def displayRender():
 def place(canvas,item,x,y) :
     for i in range(len(item)):
         for j in range(len(item[i])):
-            if item[i][j] != 0 and item[i][j][0] != "[":
-                canvas[y+i][x+j] = f"[{item[i][j]}]"
-            elif item[i][j] != 0:
-                canvas[y+i][x+j] = f"{item[i][j]}"
+            cell = item[i][j]
+
+            if cell == 0:
+                continue
+
+            if isinstance(cell,str) and not cell.startswith("["):
+                canvas[y+i][x+j] = f"[{cell}]"
+            else:
+                canvas[y+i][x+j] = str(cell)
                 
 def texturize(list,texture):
     for i in range(len(list)):
@@ -180,17 +185,15 @@ def clear(canvas):
     return canvas, points
 
 def loseState(canvas,available):
-    counter=0
     for i in range(len(available)):
-        if available[str(i+1)][1]:
-            for j in range(len(canvas)):
-                for k in range(len(canvas[j])):
-                    if check(canvas,available[str(i+1)][0],k,j):
-                        break
-                    else:
-                        counter+=1
-            if counter >= len(canvas)*len(canvas[0]):
-                return True
+        block,avail = available[str(i+1)]
 
-    # blocks are able to placed?
-    return False
+        if not avail:
+            continue
+
+        for y in range(len(canvas)):
+            for x in range(len(canvas[y])):
+                if check(canvas,block,x,y):
+                    return False # possible block placement
+
+    return True # lose state
