@@ -197,3 +197,13 @@ def loseState(canvas,available):
                     return False # possible block placement
 
     return True # lose state
+
+def loseScreen(score):
+    # reset render
+    render = fillRender(30, 10)
+    place(render,[["Y","O","U"," ","L","O","S","T","!"]],5,5)
+    place(render, [["H", "I", "G", "H", "S", "C", "O", "R", "E",":",f"[{score}]"]], 5, 6)
+    place(render, [["P", "L", "A", "Y", " ", "A", "G", "A", "I", "N","?"]], 5, 7)
+    displayRender()
+
+

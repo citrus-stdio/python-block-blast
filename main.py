@@ -31,6 +31,7 @@ tblock1 = block([[1,1,1],[0,1,0]],3,2)
 tblock2 = block([[0,1],[1,1],[0,1]],2,3)
 tblock3 = block([[0,1,0],[1,1,1]],3,2)
 tblock4 = block([[1,0],[1,1],[1,0]],2,3)
+quit_all = False
 
 board = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
 xstrip = [["0","1","2","3","4","5","6","7"]]
@@ -101,6 +102,7 @@ while True:
         board = cleared[0]
         score += cleared[1]
         # print the scoreboard
+        scoreboard = [["S", "C", "O", "R", "E", ":", " ", str(score)]]
         place(render, scoreboard, 14, 1)
 
         # reset render
@@ -114,9 +116,16 @@ while True:
         blocks[str(playerInput[4])][1] = False
 
         # check for lose state
-        if loseState(board,blocks):
-            print("you lost")
+        if i != 2:
+            if loseState(board,blocks):
+                loseScreen(score)
+                quit_all = True
 
-        #if input("press 0 to continue: ") != str(0):
-            #break
+
+        if quit_all:
+            break
+    if quit_all:
+        break
+
+print("Thanks for playing o7")
 
