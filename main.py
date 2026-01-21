@@ -121,7 +121,7 @@ while True:
                 loseScreen(score)
                 quit_all = True
 
-
+        # lowkenuinely jank but if it works it works ig
         if quit_all:
             break
     if quit_all:

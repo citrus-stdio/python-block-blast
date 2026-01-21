@@ -1,6 +1,6 @@
 render = []
 
-# errors!!
+# errors!!!
 class InvalidBlockChoice(Exception) : pass
 class InvalidCoordinate(Exception) : pass
 class PlacementError(Exception) : pass
